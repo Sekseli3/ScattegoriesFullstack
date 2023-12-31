@@ -94,10 +94,12 @@ function MainMenu() {
           <button onClick = {() => restart()}>Restart</button>
         </div>
         <h1>{number}</h1>
+    <div className="form-container">
+    <div className="form-group">
         {categoriesList.slice((round-1) * cpr,round*cpr).map((category, index) => (
-      <div key={index}>
-      <label>{category  }</label>
-      <input 
+      <div key={index} className="input-group">
+      <label className="category-lavel">{category  }</label>
+      <input className="category-input"
         type="text" 
         disabled={count === 0} 
         value={inputs[index]} 
@@ -109,6 +111,8 @@ function MainMenu() {
       />
     </div>
   ))}
+  </div>
+  </div>
       </div>
     );
 }
