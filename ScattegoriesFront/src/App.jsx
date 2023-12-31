@@ -1,36 +1,37 @@
-import React, { useState, useEffect, useContext} from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
-import './App.css';
-import alarmSound from './assets/clock.mp3';
+import React, { useState, useEffect, useContext} from 'react'
+import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom'
+import './App.css'
+import alarmSound from './assets/clock.mp3'
 import categories from './assets/ScattegoriesCategories.txt'
 
 function MainMenu() {
-  const [number, setNumber] = useState();
-  const [categoriesList, setCategoriesList] = useState([]);
-  const [count, setCount] = useState(0);
-  const [round, setRound] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [audio, setAudio] = useState(null);
+  const [number, setNumber] = useState()
+  const [categoriesList, setCategoriesList] = useState([])
+  const [count, setCount] = useState(0)
+  const [round, setRound] = useState(0)
+  const [isRunning, setIsRunning] = useState(false)
+  const [audio, setAudio] = useState(null)
+  const [inputs, setInputs] = useState(Array(categoriesList.length).fill(''))
 
 useEffect(() => {
-  const audioObj = new Audio(alarmSound);
-  setAudio(audioObj);
-}, []);
+  const audioObj = new Audio(alarmSound)
+  setAudio(audioObj)
+}, [])
 
   useEffect(() => {
     if (isRunning && count > 0) {
-      const timer = setTimeout(() => setCount(count - 1), 1000);
-      return () => clearTimeout(timer);
+      const timer = setTimeout(() => setCount(count - 1), 1000)
+      return () => clearTimeout(timer)
     } else if (count === 0) {
-      setIsRunning(false);
+      setIsRunning(false)
     }
-  }, [count, isRunning]);
+  }, [count, isRunning])
 
   useEffect(() => {
     if (isRunning) {
-      setRound(round + 1);
+      setRound(round + 1)
     }
-  }, [isRunning]);
+  }, [isRunning])
 
   const cpr = 12
 
@@ -43,13 +44,20 @@ useEffect(() => {
         setCategoriesList(categories)
       });
   }, [])
-  function startGame(){
-    setIsRunning(true)
-    setCount(60)
+
+  const startGame = () => {
+    if(number === undefined){
+      alert("Press Roll to get a letter")
+      return
+    }
+    setIsRunning(true);
+    setCount(60);
+    setInputs(Array(categoriesList.length).fill(''))
     if (audio) {
-      audio.play().catch(error => console.log(error));
+      audio.play().catch(error => console.log(error))
     }
   }
+
   function randomChar() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     setNumber(chars.charAt(Math.floor(Math.random() * chars.length)))
@@ -59,7 +67,7 @@ useEffect(() => {
     setIsRunning(false)
     setRound(0)
     if (audio) {
-      audio.pause();
+      audio.pause()
       audio.currentTime = 0;  // Optional: reset audio to start
     }
   }
@@ -88,11 +96,20 @@ useEffect(() => {
       </div>
       <h1>{number}</h1>
       {categoriesList.slice((round-1) * cpr,round*cpr).map((category, index) => (
-        <div key={index}>
-          <label>{category}</label>
-          <input type="text" disabled={count === 0} />
-        </div>
-      ))}
+    <div key={index}>
+    <label>{category  }</label>
+    <input 
+      type="text" 
+      disabled={count === 0} 
+      value={inputs[index]} 
+      onChange={event => {
+        const newInputs = [...inputs]
+        newInputs[index] = event.target.value
+        setInputs(newInputs)
+      }}
+    />
+  </div>
+))}
     </div>
   );
 }
