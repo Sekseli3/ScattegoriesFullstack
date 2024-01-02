@@ -11,6 +11,6 @@ export default defineConfig({
     outDir: 'dist',
     //assetsDir: './',
   },
-  base: '/ScattegoriesFullstack'
+  base: '/ScattegoriesDeploy/'
 })
 
