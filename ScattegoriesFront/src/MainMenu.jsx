@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react'
 import './App.css'
 import alarmSound from './assets/clock.mp3'
+import explosion from './assets/explosion.mp3'
 import categories from './assets/ScattegoriesCategories.txt'
 
 function MainMenu() {
@@ -9,6 +10,8 @@ function MainMenu() {
     const [count, setCount] = useState(0)
     const [round, setRound] = useState(0)
     const [isRunning, setIsRunning] = useState(false)
+    const [explosionAudio, setExplosionAudio] = useState(null);
+
     const [audio, setAudio] = useState(null)
     const [inputs, setInputs] = useState(Array(categoriesList.length).fill(''))
   
@@ -16,15 +19,23 @@ function MainMenu() {
     const audioObj = new Audio(alarmSound)
     setAudio(audioObj)
   }, [])
+
+  useEffect(() => {
+    const explosionAudioObj = new Audio(explosion);
+    setExplosionAudio(explosionAudioObj);
+  }, []);
   
-    useEffect(() => {
-      if (isRunning && count > 0) {
-        const timer = setTimeout(() => setCount(count - 1), 1000)
-        return () => clearTimeout(timer)
-      } else if (count === 0) {
-        setIsRunning(false)
-      }
-    }, [count, isRunning])
+useEffect(() => {
+  if (isRunning && count > 0) {
+    const timer = setTimeout(() => setCount(count - 1), 1000);
+    return () => clearTimeout(timer);
+  } else if (count === 0) {
+    if (explosionAudio) {
+      explosionAudio.play();
+    }
+    setIsRunning(false);
+  }
+}, [count, isRunning, explosionAudio]);
   
     useEffect(() => {
       if (isRunning) {
