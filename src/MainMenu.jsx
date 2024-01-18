@@ -10,8 +10,8 @@ function MainMenu() {
     const [count, setCount] = useState(0)
     const [round, setRound] = useState(0)
     const [isRunning, setIsRunning] = useState(false)
+    const [points,setPoints] = useState(0)
     const [explosionAudio, setExplosionAudio] = useState(null);
-
     const [audio, setAudio] = useState(null)
     const [inputs, setInputs] = useState(Array(categoriesList.length).fill(''))
   
@@ -30,12 +30,13 @@ useEffect(() => {
     const timer = setTimeout(() => setCount(count - 1), 1000);
     return () => clearTimeout(timer);
   } else if (count === 0) {
+    calculatePoints()
     if (explosionAudio) {
       explosionAudio.play();
     }
     setIsRunning(false);
   }
-}, [count, isRunning, explosionAudio]);
+}, [count, isRunning, explosionAudio, inputs, points]);
   
     useEffect(() => {
       if (isRunning) {
@@ -81,11 +82,28 @@ useEffect(() => {
         audio.currentTime = 0;  // Optional: reset audio to start
       }
     }
+
+    function calculatePoints(){
+        let points = 0
+        for(let i = 0; i < inputs.length; i++){
+            if(inputs[i].charAt(0).toUpperCase() === number){
+                points += 1
+            }
+            else if(inputs[i].slice(0,3).toLowerCase() === "the"){
+                if(inputs[i].charAt(4).toUpperCase() === number){
+                points += 1
+                }
+             }
+        }
+        setPoints(points)
+    }
+
     const rotation = (count / 60) * 360
   
     return (
       <div>
         <h1> Round: {round}</h1>
+        <h1> Points: {points}</h1>
         <h1>{count > 0 ? `Time remaining: ${count} seconds` : 'Time is up!'}</h1>
         <svg width="200" height="200">
           <circle cx="100" cy="100" r="80" stroke="black" strokeWidth="4" fill="white" />
