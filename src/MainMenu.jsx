@@ -11,7 +11,7 @@ function MainMenu() {
     const [round, setRound] = useState(0)
     const [isRunning, setIsRunning] = useState(false)
     const [points,setPoints] = useState(0)
-    const [explosionAudio, setExplosionAudio] = useState(null);
+    const [explosionAudio, setExplosionAudio] = useState(null)
     const [audio, setAudio] = useState(null)
     const [inputs, setInputs] = useState(Array(categoriesList.length).fill(''))
   
@@ -21,22 +21,22 @@ function MainMenu() {
   }, [])
 
   useEffect(() => {
-    const explosionAudioObj = new Audio(explosion);
-    setExplosionAudio(explosionAudioObj);
+    const explosionAudioObj = new Audio(explosion)
+    setExplosionAudio(explosionAudioObj)
   }, []);
   
 useEffect(() => {
   if (isRunning && count > 0) {
-    const timer = setTimeout(() => setCount(count - 1), 1000);
-    return () => clearTimeout(timer);
+    const timer = setTimeout(() => setCount(count - 1), 1000)
+    return () => clearTimeout(timer)
   } else if (count === 0) {
     calculatePoints()
     if (explosionAudio) {
-      explosionAudio.play();
+      explosionAudio.play()
     }
-    setIsRunning(false);
+    setIsRunning(false)
   }
-}, [count, isRunning, explosionAudio, inputs, points]);
+}, [count, isRunning, explosionAudio, inputs, points])
   
     useEffect(() => {
       if (isRunning) {
@@ -53,7 +53,7 @@ useEffect(() => {
         .then(data => {
           const categories = data.split('\n').filter(category => category)
           setCategoriesList(categories)
-        });
+        })
     }, [])
   
     const startGame = () => {
@@ -61,8 +61,8 @@ useEffect(() => {
         alert("Press Roll to get a letter")
         return
       }
-      setIsRunning(true);
-      setCount(60);
+      setIsRunning(true)
+      setCount(60)
       setInputs(Array(categoriesList.length).fill(''))
       if (audio) {
         audio.play().catch(error => console.log(error))
